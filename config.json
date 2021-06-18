@@ -1,21 +1,13 @@
 {
   "accepts": ["id","ids"],
   "classes": ["Gene"],
-  "columnMapping": {
-    "Gene": {
-      "id": "primaryIdentifier"
-    },
-    "Protein": {
-      "id": "primaryAccession"
-    }
-  },
   "depends": ["ProteinAtlasExpression"],
   "description" : "Heat map showing protein tissue localisation data from Protein Atlas (antibody staining data).\\nData is divided into tissues with each tissue shown in it’s own block, each of which is further\\ndivided into specialised cells.  Expression level is binned into not detected, low, medium and high.\\nIt is possible to toggle the display to show one or more expression bins. Note that the expression\\ncolour scale does not work when toggling between bins.",
   "files" : {
     "css" : "dist/style.css",
     "js" : "dist/bundle.js"
   },
-  "threshold": 100,
+  "threshold": 500,
   "toolName" : {
     "human" :"Protein Tissue Localisation",
     "cljs" :"bluegenesProteinTissueLocalisation"    

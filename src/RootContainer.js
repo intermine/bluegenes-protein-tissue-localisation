@@ -85,6 +85,12 @@ const RootContainer = ({ serviceUrl, entity }) => {
 			label: tissue
 		}));
 
+		tissueList.sort((a, b) => {
+			if (a.label < b.label) return -1;
+			if (a.label > b.label) return 1;
+			return 0;
+		});
+
 		setTissueList(tissueList);
 		setSelectedTissue(tissueList);
 		setHeatmapData(heatmapObj);
@@ -154,13 +160,7 @@ const RootContainer = ({ serviceUrl, entity }) => {
 				filterTissue={() => filterByTissue(selectedExpression)}
 			/>
 			{Object.keys(filteredHeatmapData).length ? (
-				<Heatmap
-					graphData={filteredHeatmapData}
-					graphHeight={
-						data.length == 1 ? data.length * 60 + 200 : data.length * 60 + 180
-					}
-					getLevel={getLevel}
-				/>
+				<Heatmap graphData={filteredHeatmapData} getLevel={getLevel} />
 			) : loading ? (
 				<Loading />
 			) : (
