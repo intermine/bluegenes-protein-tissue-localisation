@@ -1,18 +1,24 @@
 import React from 'react';
 import { VegaLite } from 'react-vega';
 
-const Heatmap = ({ graphData, getLevel }) => {
+const Heatmap = ({ graphData }) => {
 	const spec = {
 		$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-		// width: 'container',
-		// height: { step: 10 },
-		// autosize: {
-		// 	type: 'fit-x',
-		// 	contains: 'padding'
-		// },
+		height: { step: 10 },
 		mark: 'rect',
 		encoding: {
-			row: { field: 'tissue' },
+			column: {
+				field: 'tissue',
+				type: 'ordinal',
+				header: {
+					orient: 'bottom',
+					labelAngle: 45,
+					labelAlign: 'left',
+					labelAnchor: 'start'
+				},
+				title: null,
+				spacing: 0
+			},
 			y: { field: 'gene', type: 'ordinal', title: null },
 			x: {
 				field: 'cell',
@@ -22,17 +28,21 @@ const Heatmap = ({ graphData, getLevel }) => {
 			},
 			color: {
 				field: 'expression',
-				type: 'quantitative',
-				scale: { scheme: 'blues' },
+				type: 'ordinal',
+				scale: {
+					scheme: 'blues',
+					domain: ['Not detected', 'Low', 'Medium', 'High']
+				},
 				legend: null
 			},
 			tooltip: [
 				{ field: 'tissue', type: 'ordinal' },
 				{ field: 'gene', type: 'ordinal' },
 				{ field: 'cell', type: 'ordinal' },
-				{ field: 'expression', type: 'quantitative' }
+				{ field: 'expression', type: 'ordinal' }
 			]
 		},
+		resolve: { scale: { x: 'independent' } },
 		data: { name: 'values' }
 	};
 

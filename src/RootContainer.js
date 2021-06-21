@@ -41,7 +41,7 @@ const RootContainer = ({ serviceUrl, entity }) => {
 					tissue: p.tissue.name,
 					gene: d.symbol,
 					cell: p.cellType,
-					expression: getScore(p.level)
+					expression: p.level
 				});
 				tissueSet.add(p.tissue.name);
 			});
@@ -64,20 +64,6 @@ const RootContainer = ({ serviceUrl, entity }) => {
 		setFilterHeatmapData(heatmapValues);
 	}, [data]);
 
-	const getScore = level => {
-		if (level === 'Low') return 1;
-		if (level === 'Medium') return 2;
-		if (level === 'High') return 3;
-		return 0;
-	};
-
-	const getLevel = value => {
-		if (value === 0) return 'Not Detected';
-		if (value === 1) return 'Low';
-		if (value === 2) return 'Medium';
-		if (value === 3) return 'High';
-	};
-
 	const expressionLevelFilter = e => {
 		const { value, checked } = e.target;
 		// simply toggle the state of expression level in its map
@@ -92,30 +78,17 @@ const RootContainer = ({ serviceUrl, entity }) => {
 	const filterByTissue = newSelectedExpression => {
 		const tissues = selectedTissue.map(t => t.value);
 		const filteredValues = heatmapData.filter(({ tissue, expression }) => {
-			if (
-				tissues.includes(tissue) &&
-				expression == 0 &&
-				newSelectedExpression['Not Detected']
-			)
-				return true;
-			if (
-				tissues.includes(tissue) &&
-				expression == 1 &&
-				newSelectedExpression['Low']
-			)
-				return true;
-			if (
-				tissues.includes(tissue) &&
-				expression == 2 &&
-				newSelectedExpression['Medium']
-			)
-				return true;
-			if (
-				tissues.includes(tissue) &&
-				expression == 3 &&
-				newSelectedExpression['High']
-			)
-				return true;
+			if (tissues.includes(tissue)) {
+				if (
+					expression === 'Not detected' &&
+					newSelectedExpression['Not Detected']
+				)
+					return true;
+				if (expression === 'Low' && newSelectedExpression['Low']) return true;
+				if (expression === 'Medium' && newSelectedExpression['Medium'])
+					return true;
+				if (expression === 'High' && newSelectedExpression['High']) return true;
+			}
 
 			return false;
 		});
@@ -132,7 +105,7 @@ const RootContainer = ({ serviceUrl, entity }) => {
 				filterTissue={() => filterByTissue(selectedExpression)}
 			/>
 			{filteredHeatmapData.length ? (
-				<Heatmap graphData={filteredHeatmapData} getLevel={getLevel} />
+				<Heatmap graphData={filteredHeatmapData} />
 			) : loading ? (
 				<Loading />
 			) : (
