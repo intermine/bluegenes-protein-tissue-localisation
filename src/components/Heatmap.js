@@ -14,7 +14,7 @@ const Heatmap = ({ graphData }) => {
 					orient: 'bottom',
 					labelAngle: 45,
 					labelAlign: 'left',
-					labelAnchor: 'start'
+					labelAnchor: 'middle'
 				},
 				title: null,
 				spacing: 0
