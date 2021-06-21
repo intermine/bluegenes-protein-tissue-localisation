@@ -1,141 +1,54 @@
 import React from 'react';
-import { HeatMap } from '@nivo/heatmap';
-const heatmap_colors = ['#B9D6F7', '#87B8EF', '#569EEE', '#1A75DC'];
+import { VegaLite } from 'react-vega';
 
-const Heatmap = ({ graphData, graphHeight, getLevel }) => {
+const Heatmap = ({ graphData }) => {
+	const spec = {
+		$schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+		height: { step: 10 },
+		mark: 'rect',
+		encoding: {
+			column: {
+				field: 'tissue',
+				type: 'ordinal',
+				header: {
+					orient: 'bottom',
+					labelAngle: 45,
+					labelAlign: 'left',
+					labelAnchor: 'middle'
+				},
+				title: null,
+				spacing: 0
+			},
+			y: { field: 'gene', type: 'ordinal', title: null },
+			x: {
+				field: 'cell',
+				type: 'ordinal',
+				title: null,
+				axis: { orient: 'top', labelAngle: -45, labelAlign: 'left' }
+			},
+			color: {
+				field: 'expression',
+				type: 'ordinal',
+				scale: {
+					scheme: 'blues',
+					domain: ['Not detected', 'Low', 'Medium', 'High']
+				},
+				legend: null
+			},
+			tooltip: [
+				{ field: 'tissue', type: 'ordinal' },
+				{ field: 'gene', type: 'ordinal' },
+				{ field: 'cell', type: 'ordinal' },
+				{ field: 'expression', type: 'ordinal' }
+			]
+		},
+		resolve: { scale: { x: 'independent' } },
+		data: { name: 'values' }
+	};
+
 	return (
 		<div className="graph-container">
-			{Object.keys(graphData).map((item, index) => (
-				<HeatMap
-					key={index}
-					animate={false}
-					data={Object.values(graphData[item].data)}
-					keys={Object.values(graphData[item].tissue).map(t => t.value)}
-					colors={heatmap_colors}
-					indexBy={'Gene'}
-					margin={{
-						top: 200,
-						right: 0,
-						bottom: 30,
-						left: index != 0 ? 0 : 60
-					}}
-					forceSquare={true}
-					axisTop={{
-						orient: 'top',
-						tickSize: 5,
-						tickPadding: 5,
-						tickRotation: -90,
-						legendOffset: -160,
-						legendPosition: 'left',
-						legend: item
-					}}
-					height={graphHeight}
-					width={
-						index != 0
-							? Object.values(graphData[item].tissue).length * 50 + 100
-							: Object.values(graphData[item].tissue).length * 50 + 160
-					}
-					axisRight={null}
-					axisBottom={null}
-					axisLeft={
-						!index
-							? {
-									orient: 'left',
-									tickSize: 5,
-									tickPadding: 5,
-									tickRotation: 0
-							  }
-							: null
-					}
-					tooltip={node => {
-						const { xKey, yKey, value, color } = node;
-						return (
-							<div
-								style={{
-									whiteSpace: 'pre',
-									display: 'flex',
-									alignItems: 'center'
-								}}
-							>
-								<span
-									style={{
-										display: 'block',
-										width: 12,
-										height: 12,
-										background: color,
-										marginRight: 7
-									}}
-								></span>
-								<span>
-									{yKey} - {xKey}
-									{value !== undefined ? ':' : ''}{' '}
-									<strong>{getLevel(value)}</strong>
-								</span>
-							</div>
-						);
-					}}
-					cellHoverOthersOpacity={1}
-					cellOpacity={1}
-					cellBorderWidth={1}
-					cellBorderColor="rgb(51, 51, 51)"
-					labelTextColor="rgb(51, 51, 51)"
-					nanColor="#fff"
-					cellShape={({
-						data,
-						value,
-						x,
-						y,
-						width,
-						height,
-						color,
-						opacity,
-						borderWidth,
-						borderColor,
-						enableLabel,
-						textColor,
-						onHover,
-						onLeave,
-						onClick,
-						theme
-					}) => {
-						return (
-							<g
-								transform={`translate(${x}, ${y})`}
-								onMouseEnter={onHover}
-								onMouseMove={onHover}
-								onMouseLeave={onLeave}
-								onClick={e => onClick(data, e)}
-								style={{ cursor: 'pointer' }}
-							>
-								<rect
-									x={width * -0.5}
-									y={height * -0.5}
-									width={width}
-									height={height}
-									fill={color}
-									fillOpacity={opacity}
-									strokeWidth={borderWidth}
-									stroke={borderColor}
-									strokeOpacity={opacity}
-								/>
-								{enableLabel && (
-									<text
-										alignmentBaseline="central"
-										textAnchor="middle"
-										style={{
-											...theme.labels.text,
-											fill: textColor
-										}}
-										fillOpacity={opacity}
-									>
-										{isNaN(value) ? 'NA' : ''}
-									</text>
-								)}
-							</g>
-						);
-					}}
-				/>
-			))}
+			<VegaLite spec={spec} data={{ values: graphData }} />
 		</div>
 	);
 };

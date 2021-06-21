@@ -10,6 +10,7 @@
 
 
 	.rootContainer {
+        max-height: 500px;
     padding: 10px;
     position: relative;
 
@@ -54,16 +55,20 @@
     }
 
     .graph-container {
-      display: flex;
-      text-align: center;
+      width: 100%;
+
+      .vega-embed {
+          width: 100%;
+      }
     }
 
     .filter-container {
       text-align: left;
-      font-size: 16px;
-      font-weight: 300;
+      font-size: 12px;
+      font-weight: 400;
       font-family: sans-serif;
       white-space: nowrap;
+      margin-bottom: 10px;
 
       & > div {
         display: inline-block;
@@ -79,8 +84,12 @@
       }
       .filter-option {
         padding-top: 10px;
-        font-size: 16px;
+        font-size: 12px;
         font-family: arial;
+
+        label {
+            font-size: 12px;
+        }
 
         .option {
           padding: 8px 15px;
@@ -110,12 +119,12 @@
       height: 25px;
       width: 250px;
       margin-left: 20px;
-      background-image: linear-gradient(to right,  #B9D6F7, #1A75DC);
+      background-image: linear-gradient(to right,  #CFE1F2, #0A4A90);
       font-size: 13px;
       font-family: sans-serif;
       .legend-title {
         position: relative;
-        font-size: 16px;
+        font-size: 12px;
         font-weight: 300;
         bottom: 30px;
         left: 60px;
